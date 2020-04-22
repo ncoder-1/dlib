@@ -174,11 +174,11 @@ int main(int argc, char** argv) try
 
     // prelu layers have a floating point parameter.  If you want to set it to
     // something other than its default value you can do so like this:
-    net_type2 pnet(prelu_(0.2),  
-                   prelu_(0.25),
-                   repeat_group(prelu_(0.3),prelu_(0.4)) // Initialize all the prelu instances in the repeat 
-                                                         // layer.  repeat_group() is needed to group the 
-                                                         // things that are part of repeat's block.
+    net_type2 pnet(prelu_(0.2f),
+                   prelu_(0.25f),
+                   repeat_group(prelu_(0.3f),prelu_(0.4f)) // Initialize all the prelu instances in the repeat
+                                                           // layer.  repeat_group() is needed to group the
+                                                           // things that are part of repeat's block.
                    );
     // As you can see, a network will greedily assign things given to its
     // constructor to the layers inside itself.  The assignment is done in the
@@ -259,12 +259,12 @@ int main(int argc, char** argv) try
     // The dnn_trainer will use SGD by default, but you can tell it to use
     // different solvers like adam with a weight decay of 0.0005 and the given
     // momentum parameters. 
-    dnn_trainer<net_type,adam> trainer(net,adam(0.0005, 0.9, 0.999));
+    dnn_trainer<net_type,adam> trainer(net,adam(0.0005f, 0.9f, 0.999f));
     // Also, if you have multiple graphics cards you can tell the trainer to use
     // them together to make the training faster.  For example, replacing the
     // above constructor call with this one would cause it to use GPU cards 0
     // and 1.
-    //dnn_trainer<net_type,adam> trainer(net,adam(0.0005, 0.9, 0.999), {0,1});
+    //dnn_trainer<net_type,adam> trainer(net,adam(0.0005f, 0.9f, 0.999f), {0,1});
 
     trainer.be_verbose();
     // While the trainer is running it keeps an eye on the training error.  If
@@ -286,7 +286,7 @@ int main(int argc, char** argv) try
     // For example, the loop below stream MNIST data to out trainer.
     std::vector<matrix<unsigned char>> mini_batch_samples;
     std::vector<unsigned long> mini_batch_labels; 
-    dlib::rand rnd(time(0));
+    dlib::rand rnd(time(nullptr));
     // Loop until the trainer's automatic shrinking has shrunk the learning rate to 1e-6.
     // Given our settings, this means it will stop training after it has shrunk the
     // learning rate 3 times.
@@ -363,7 +363,7 @@ int main(int argc, char** argv) try
     }
     cout << "training num_right: " << num_right << endl;
     cout << "training num_wrong: " << num_wrong << endl;
-    cout << "training accuracy:  " << num_right/(double)(num_right+num_wrong) << endl;
+    cout << "training accuracy:  " << num_right / static_cast<double>(num_right + num_wrong) << endl;
 
     predicted_labels = tnet(testing_images);
     num_right = 0;
@@ -378,11 +378,10 @@ int main(int argc, char** argv) try
     }
     cout << "testing num_right: " << num_right << endl;
     cout << "testing num_wrong: " << num_wrong << endl;
-    cout << "testing accuracy:  " << num_right/(double)(num_right+num_wrong) << endl;
+    cout << "testing accuracy:  " << num_right / static_cast<double>(num_right + num_wrong) << endl;
 
 }
 catch(std::exception& e)
 {
     cout << e.what() << endl;
 }
-
